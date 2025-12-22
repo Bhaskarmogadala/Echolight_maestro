@@ -42,7 +42,7 @@ If the RTC time becomes inaccurate, the user can:
 - **LEDs (Streetlights)**
 - **LDR Sensor**
 - **Buzzer**
-- 
+  
 ## Software Requirements :
 - **Embedded C programming**
 - **Keil µVision (C compiler)**
