@@ -17,7 +17,6 @@
 volatile u32 setflag=0;
 void enable_eint3(void);
 u32 num,key;
-void menu(void);
 void displaytime(void);
 void editinfo(void);
 void SetRTCHourinfo(void);
@@ -103,7 +102,7 @@ int main()
 					case '1':editinfo();
 									break;
 					case '2':StrLCD("2.Exit");
-								menuActive = 0;      // exit menu
+									menuActive = 0;      // exit menu
 									break;
 				}
 			}
@@ -274,4 +273,5 @@ void enable_eint3(void)
 	EXTMODE=1<<3;
 	EXTPOLAR=0<<3;
 }
+
 
