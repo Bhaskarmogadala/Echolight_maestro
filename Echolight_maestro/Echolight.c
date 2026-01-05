@@ -82,9 +82,8 @@ int main()
 			{	
 				// Time is between 06:00 and 18:00	
 				// Day time: show RTC time/date only
-				CmdLCD(CLEAR_LCD);
-        delay_MS(2);
-        displaytime();
+				delay_MS(2);
+        		displaytime();
 			}
 		}
 	}
@@ -291,3 +290,4 @@ void enable_eint3(void)
 	EXTMODE=1<<3;
 	EXTPOLAR=0<<3;
 }
+
