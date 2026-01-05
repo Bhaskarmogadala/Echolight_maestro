@@ -41,9 +41,9 @@ int main()
 	Init_kpm();
 	//Initialize ADC
 	Init_ADC();
-  // Initialize the LCD
+    //Initialize the LCD
 	InitLCD();
-	  // Set the initial time (hours, minutes, seconds)
+	// Set the initial time (hours, minutes, seconds)
 	SetRTCHour(5);
 	SetRTCMin(15);
 	SetRTCSec(05);
@@ -59,29 +59,28 @@ int main()
 			if((hour >= 18 && hour <= 23) || (hour >= 0 && hour < 6))  
 			{
 				// Time is between 18:00 and 06:00
-				 // Night time: show light output + ADC value
-			
+				// Night time: show light output + ADC value
 				delay_MS(2);
 				CmdLCD(GOTO_LINE2_POS0+11);
 				Read_ADC(1,&adcDVal,&eAR);
 				F32LCD(eAR,3);
 				if(eAR > 1.5)
-        {
-            IOSET1 = 1<<24;   // Turn ON LED
+        		{
+            		IOSET1 = 1<<24;   // Turn ON LED
 					delay_MS(20);
-        }
-        else
-        {
-            IOCLR1 = 1<<24;   // Turn OFF LED
+        		}
+        		else
+        		{
+            		IOCLR1 = 1<<24;   // Turn OFF LED
 					delay_MS(20);
-        }
+        		}
 			}
 			if (!((hour >= 18 && hour <= 23) || (hour >= 0 && hour < 6)))
 			{	
 				// Time is between 06:00 and 18:00	
 				// Day time: show RTC time/date only
-        delay_MS(2);
-        displaytime();
+        		delay_MS(2);
+        		displaytime();
 			}
 			if(setflag == 1)
 			{
@@ -105,7 +104,7 @@ int main()
 									break;
 					case '2':StrLCD("2.Exit");
 								menuActive = 0;      // exit menu
-											break;
+									break;
 				}
 			}
 			
@@ -116,16 +115,16 @@ int main()
 void displaytime(void)
 {
 	// Get and display the current time on LCD
-			GetRTCHour(&hour);
-			GetRTCMin(&min);
-			GetRTCSec(&sec);
-			DisplayRTCTime(hour,min,sec);
-			GetRTCDate(&date);
-			GetRTCMonth(&month);
-			GetRTCYear(&year);
-			DisplayRTCDate(date,month,year);
-			GetRTCDay(&day);
-			DisplayRTCDay(day);
+	GetRTCHour(&hour);
+	GetRTCMin(&min);
+	GetRTCSec(&sec);
+	DisplayRTCTime(hour,min,sec);
+	GetRTCDate(&date);
+	GetRTCMonth(&month);
+	GetRTCYear(&year);
+	DisplayRTCDate(date,month,year);
+	GetRTCDay(&day);
+	DisplayRTCDay(day);
 }
 void editinfo(void)
 {
@@ -142,38 +141,38 @@ void editinfo(void)
 	delay_MS(100);
 	ch=KeyScan();
 	delay_MS(50);
-		switch(ch)
-		{
+	switch(ch)
+	{
 		case '1':
-						SetRTCHourinfo();
-							break;
+					SetRTCHourinfo();
+					break;
 		case '2':
-						SetRTCMinuteinfo();
-							break;
-    case '3':
-            SetRTCSecondsinfo();
-							break;
-    case '4':
-            SetRTCDateinfo();
-							break;
-    case '5':
-            SetRTCMonthinfo();
-							break;
-    case '6':
-            SetRTCYearinfo();
-							break;
+					SetRTCMinuteinfo();
+					break;
+    	case '3':
+    		        SetRTCSecondsinfo();
+					break;
+    	case '4':
+            		SetRTCDateinfo();
+					break;
+    	case '5':
+            		SetRTCMonthinfo();
+					break;
+    	case '6':
+            		SetRTCYearinfo();
+					break;
 		case '0':
-						menuActive = 0; 
-						CmdLCD(CLEAR_LCD);
-            return ;
+					menuActive = 0; 
+					CmdLCD(CLEAR_LCD);
+            		return ;
 		}
 	}
 }
 void SetRTCHourinfo(void)
 {
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Hour:");
+	StrLCD("Enter Hour:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
@@ -182,43 +181,41 @@ void SetRTCHourinfo(void)
 
     SetRTCHour(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void SetRTCMinuteinfo(void)
 {
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Minute:");
+	StrLCD("Enter Minute:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
     StrLCD("New Min:");
     U32LCD(num);           // function to display number (you likely have it in lcd.c)
-
     SetRTCMin(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void SetRTCSecondsinfo(void)
 {
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Sec:");
+	StrLCD("Enter Sec:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
     StrLCD("New Sec:");
     U32LCD(num);           // function to display number (you likely have it in lcd.c)
-
     SetRTCSec(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void SetRTCDateinfo(void)
 {
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Date:");
+	StrLCD("Enter Date:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
@@ -227,13 +224,13 @@ void SetRTCDateinfo(void)
 
     SetRTCDate(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void SetRTCMonthinfo(void)
 {
 	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Mon:");
+	StrLCD("Enter Mon:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
@@ -242,13 +239,13 @@ void SetRTCMonthinfo(void)
 
     SetRTCMonth(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void SetRTCYearinfo(void )
 {
 	CmdLCD(CLEAR_LCD);
     CmdLCD(GOTO_LINE1_POS0);
-		StrLCD("Enter Year:");
+	StrLCD("Enter Year:");
     ReadNum(&num, &ch);     // wait for number input from keypad
     // Show what you entered
     CmdLCD(GOTO_LINE2_POS0);
@@ -257,7 +254,7 @@ void SetRTCYearinfo(void )
 
     SetRTCYear(num);        // update RTC
     delay_MS(500);
-		CmdLCD(CLEAR_LCD);
+	CmdLCD(CLEAR_LCD);
 }
 void eint3_isr(void)__irq
 {
@@ -277,3 +274,4 @@ void enable_eint3(void)
 	EXTMODE=1<<3;
 	EXTPOLAR=0<<3;
 }
+
