@@ -14,6 +14,7 @@
 #define EINT3_PIN 30
 #define EINT3_FUN 2
 #define EINT3_INT 17
+volatile u32 setflag=0;
 void enable_eint3(void);
 u32 num,key;
 void menu(void);
@@ -33,6 +34,7 @@ u8 menuActive = 0;
 int main()
 {
 	IODIR1= 1<<24;
+	enable_eint3();
 	// Initialize RTC
 	RTC_Init();
 	// Initialize Kyepad
@@ -51,10 +53,6 @@ int main()
 	SetRTCDay(4);
 	while(1)
 	{
-		//if((READBIT(IOPIN0,TRG_SW))==0)
-		//{
-			enable_eint3();
-		//}
 		if(!menuActive)
 		{
 			displaytime();
@@ -82,41 +80,37 @@ int main()
 			{	
 				// Time is between 06:00 and 18:00	
 				// Day time: show RTC time/date only
-				delay_MS(2);
-        		displaytime();
+        delay_MS(2);
+        displaytime();
 			}
+			if(setflag == 1)
+			{
+				setflag=0;
+				menuActive = 1;          // menu mode
+				while(READBIT(IOPIN0,16)==0);
+				delay_MS(100);
+				CmdLCD(CLEAR_LCD);
+				CmdLCD(GOTO_LINE1_POS0);
+				StrLCD("1.EDIT RTC INFO");
+				CmdLCD(GOTO_LINE2_POS0);
+				StrLCD("2.EXIT");
+				delay_MS(100);
+				ch=KeyScan();
+				delay_MS(100);
+				CmdLCD(CLEAR_LCD);
+				CmdLCD(GOTO_LINE1_POS0);
+				switch(ch)
+				{
+					case '1':editinfo();
+									break;
+					case '2':StrLCD("2.Exit");
+								menuActive = 0;      // exit menu
+											break;
+				}
+			}
+			
 		}
 	}
-}
-
-void menu(void)
-{
-	menuActive = 1;          // menu mode
-			while(READBIT(IOPIN0,16)==0);
-			delay_MS(100);
-			CmdLCD(CLEAR_LCD);
-			CmdLCD(GOTO_LINE1_POS0);
-			StrLCD("1.EDIT RTC INFO");
-			CmdLCD(GOTO_LINE2_POS0);
-			StrLCD("2.EXIT");
-			delay_MS(100);
-			CmdLCD(CLEAR_LCD);
-			CmdLCD(GOTO_LINE1_POS0);
-			StrLCD("Enter choice");
-			ch=KeyScan();
-			delay_MS(100);
-			CmdLCD(CLEAR_LCD);
-			CmdLCD(GOTO_LINE1_POS0);
-			switch(ch)
-			{
-				case '1':editinfo();
-								//break;
-				return ;
-				case '2':StrLCD("2.Exit");
-							menuActive = 0;      // exit menu
-						  				//break;
-				return ;
-			}
 }
 
 void displaytime(void)
@@ -135,9 +129,8 @@ void displaytime(void)
 }
 void editinfo(void)
 {
-	StrLCD("1.EDIT RTC INFO");
-	delay_MS(200);
-	CmdLCD(CLEAR_LCD);
+	while(1)
+	{
 	CmdLCD(GOTO_LINE1_POS0);
 	StrLCD("1-Hr ");
 	StrLCD("2-Min ");
@@ -146,13 +139,7 @@ void editinfo(void)
 	StrLCD("4-DD ");
 	StrLCD("5-Mon ");
 	StrLCD("6-yr");
-	delay_MS(200);
-	CmdLCD(CLEAR_LCD);
-	while(1)
-	{
-	CmdLCD(GOTO_LINE1_POS0);
-	StrLCD("Enter choice");
-	delay_MS(1000);
+	delay_MS(100);
 	ch=KeyScan();
 	delay_MS(50);
 		switch(ch)
@@ -274,7 +261,7 @@ void SetRTCYearinfo(void )
 }
 void eint3_isr(void)__irq
 {
-	menu();
+	setflag=1;
 	EXTINT=1<<3;
 	VICVectAddr=0;
 }
@@ -290,4 +277,3 @@ void enable_eint3(void)
 	EXTMODE=1<<3;
 	EXTPOLAR=0<<3;
 }
-
